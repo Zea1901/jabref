@@ -206,6 +206,8 @@ public class EntryEditor extends BorderPane {
                         close();
                         event.consume();
                         break;
+                    case ENTRY_EDITOR_JUMP:
+                        // TODO: Open field search bar
                     default:
                         // Pass other keys to parent
                 }

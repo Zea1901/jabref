@@ -52,6 +52,7 @@ public enum KeyBinding {
     ENTRY_EDITOR_NEXT_PANEL_2("Entry editor, next panel 2", Localization.lang("Entry editor, next panel 2"), "ctrl+PLUS", KeyBindingCategory.VIEW),
     ENTRY_EDITOR_PREVIOUS_ENTRY("Entry editor, previous entry", Localization.lang("Entry editor, previous entry"), "alt+UP", KeyBindingCategory.VIEW),
     ENTRY_EDITOR_PREVIOUS_PANEL("Entry editor, previous panel", Localization.lang("Entry editor, previous panel"), "ctrl+shift+TAB", KeyBindingCategory.VIEW),
+    ENTRY_EDITOR_JUMP("Entry editor, jump to field", Localization.lang("Entry editor, jump to field"), "ctrl+J", KeyBindingCategory.SEARCH),
     FILE_LIST_EDITOR_MOVE_ENTRY_DOWN("File list editor, move entry down", Localization.lang("File list editor, move entry down"), "ctrl+DOWN", KeyBindingCategory.VIEW),
     FILE_LIST_EDITOR_MOVE_ENTRY_UP("File list editor, move entry up", Localization.lang("File list editor, move entry up"), "ctrl+UP", KeyBindingCategory.VIEW),
     FIND_UNLINKED_FILES("Search for unlinked local files", Localization.lang("Search for unlinked local files"), "shift+F7", KeyBindingCategory.QUALITY),
