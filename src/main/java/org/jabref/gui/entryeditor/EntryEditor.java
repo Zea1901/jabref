@@ -25,6 +25,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import org.jabref.gui.DialogService;
 import org.jabref.gui.LibraryTab;
@@ -36,6 +37,7 @@ import org.jabref.gui.entryeditor.fileannotationtab.FileAnnotationTab;
 import org.jabref.gui.entryeditor.fileannotationtab.FulltextSearchResultsTab;
 import org.jabref.gui.externalfiles.ExternalFilesEntryLinker;
 import org.jabref.gui.help.HelpAction;
+import org.jabref.gui.icon.IconTheme;
 import org.jabref.gui.importer.GrobidOptInDialogHelper;
 import org.jabref.gui.keyboard.KeyBinding;
 import org.jabref.gui.keyboard.KeyBindingRepository;
@@ -62,6 +64,8 @@ import com.airhacks.afterburner.views.ViewLoader;
 import com.tobiasdiez.easybind.EasyBind;
 import com.tobiasdiez.easybind.Subscription;
 import jakarta.inject.Inject;
+import org.controlsfx.control.textfield.CustomTextField;
+import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,7 +211,9 @@ public class EntryEditor extends BorderPane {
                         event.consume();
                         break;
                     case ENTRY_EDITOR_JUMP:
-                        // TODO: Open field search bar
+                        createSearchBar();
+                        event.consume();
+                        break;
                     default:
                         // Pass other keys to parent
                 }
@@ -441,5 +447,38 @@ public class EntryEditor extends BorderPane {
 
     public void previousPreviewStyle() {
         this.entryEditorTabs.forEach(EntryEditorTab::previousPreviewStyle);
+    }
+
+    // Search bar to jump to fields in the entry editor
+    private void createSearchBar() {
+        HBox searchBox = new HBox();
+        searchBox.setId("searchBox");
+        this.setTop(searchBox);
+
+        CustomTextField searchField = (CustomTextField) TextFields.createClearableTextField();
+        searchField.setLeft(IconTheme.JabRefIcons.SEARCH.getGraphicNode());
+        searchField.setId("searchField");
+        searchField.setPrefWidth(100);
+
+        Button prevButton = IconTheme.JabRefIcons.DOWN.asButton();
+        prevButton.setId("prevButton");
+        prevButton.setOnAction(event -> {
+            // TODO: Implement previous
+        });
+
+        Button nextButton = IconTheme.JabRefIcons.UP.asButton();
+        nextButton.setId("nextButton");
+        nextButton.setOnAction(event -> {
+            // TODO: Implement next
+        });
+
+        Button closeButton = IconTheme.JabRefIcons.CLOSE.asButton();
+        closeButton.setId("closeButton");
+        closeButton.setOnAction(event -> {
+            // Remove HBox
+            this.setTop(null);
+        });
+
+        searchBox.getChildren().addAll(searchField, prevButton, nextButton, closeButton);
     }
 }
