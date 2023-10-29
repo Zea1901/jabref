@@ -2,6 +2,7 @@ package org.jabref.gui.entryeditor;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,6 +58,7 @@ import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.entry.field.Field;
+import org.jabref.model.entry.field.StandardField;
 import org.jabref.model.util.FileUpdateMonitor;
 import org.jabref.preferences.PreferencesService;
 
@@ -459,17 +461,30 @@ public class EntryEditor extends BorderPane {
         searchField.setLeft(IconTheme.JabRefIcons.SEARCH.getGraphicNode());
         searchField.setId("searchField");
         searchField.setPrefWidth(100);
+        searchField.setOnKeyPressed(ke -> {
+            switch (ke.getCode()) {
+                case ENTER:
+                    ArrayList<StandardField> fields = searchFields(searchField.getText());
+
+                    // Jump to field
+                    break;
+                default:
+                    break;
+            }
+        });
 
         Button prevButton = IconTheme.JabRefIcons.DOWN.asButton();
         prevButton.setId("prevButton");
         prevButton.setOnAction(event -> {
-            // TODO: Implement previous
+            // Search if not done
+            // Jump to previous field
         });
 
         Button nextButton = IconTheme.JabRefIcons.UP.asButton();
         nextButton.setId("nextButton");
         nextButton.setOnAction(event -> {
-            // TODO: Implement next
+            // Search if not done
+            // Jump to next field
         });
 
         Button closeButton = IconTheme.JabRefIcons.CLOSE.asButton();
@@ -480,5 +495,16 @@ public class EntryEditor extends BorderPane {
         });
 
         searchBox.getChildren().addAll(searchField, prevButton, nextButton, closeButton);
+    }
+
+    // Search for standard fields (Co-pilot)
+    ArrayList<StandardField> searchFields(String query) {
+        ArrayList<StandardField> fields = new ArrayList<>();
+        for (StandardField field : StandardField.values()) {
+            if (field.getName().contains(query)) {
+                fields.add(field);
+            }
+        }
+        return fields;
     }
 }
