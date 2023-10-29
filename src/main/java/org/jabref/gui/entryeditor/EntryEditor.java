@@ -58,7 +58,6 @@ import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.entry.field.Field;
-import org.jabref.model.entry.field.StandardField;
 import org.jabref.model.util.FileUpdateMonitor;
 import org.jabref.preferences.PreferencesService;
 
@@ -119,6 +118,9 @@ public class EntryEditor extends BorderPane {
     @Inject private JournalAbbreviationRepository journalAbbreviationRepository;
 
     private final List<EntryEditorTab> entryEditorTabs = new LinkedList<>();
+
+    private int currentIndex;
+    private ArrayList<Field> matchingFields;
 
     public EntryEditor(LibraryTab libraryTab) {
         this.libraryTab = libraryTab;
@@ -464,9 +466,15 @@ public class EntryEditor extends BorderPane {
         searchField.setOnKeyPressed(ke -> {
             switch (ke.getCode()) {
                 case ENTER:
-                    ArrayList<StandardField> fields = searchFields(searchField.getText());
+                    matchingFields = searchFields(searchField.getText());
+                    currentIndex = 0;
 
-                    // Jump to field
+                    LOGGER.debug("hi");
+
+                    for (Field field : matchingFields) {
+                        LOGGER.debug(field.getName());
+                    }
+
                     break;
                 default:
                     break;
@@ -476,15 +484,29 @@ public class EntryEditor extends BorderPane {
         Button prevButton = IconTheme.JabRefIcons.DOWN.asButton();
         prevButton.setId("prevButton");
         prevButton.setOnAction(event -> {
-            // Search if not done
-            // Jump to previous field
+            if (matchingFields.isEmpty()) {
+                matchingFields = searchFields(searchField.getText());
+                currentIndex = 0;
+            }
+
+            if (!matchingFields.isEmpty()) {
+                currentIndex = (currentIndex - 1) % matchingFields.size();
+                setFocusToField(matchingFields.get(currentIndex));
+            }
         });
 
         Button nextButton = IconTheme.JabRefIcons.UP.asButton();
         nextButton.setId("nextButton");
         nextButton.setOnAction(event -> {
-            // Search if not done
-            // Jump to next field
+            if (matchingFields.isEmpty()) {
+                matchingFields = searchFields(searchField.getText());
+                currentIndex = 0;
+            }
+
+            if (!matchingFields.isEmpty()) {
+                currentIndex = (currentIndex + 1) % matchingFields.size();
+                setFocusToField(matchingFields.get(currentIndex));
+            }
         });
 
         Button closeButton = IconTheme.JabRefIcons.CLOSE.asButton();
@@ -498,13 +520,19 @@ public class EntryEditor extends BorderPane {
     }
 
     // Search for standard fields (Co-pilot)
-    ArrayList<StandardField> searchFields(String query) {
-        ArrayList<StandardField> fields = new ArrayList<>();
-        for (StandardField field : StandardField.values()) {
-            if (field.getName().contains(query)) {
-                fields.add(field);
+    ArrayList<Field> searchFields(String query) {
+        ArrayList<Field> fields = new ArrayList<>();
+
+        for (EntryEditorTab tab : entryEditorTabs) {
+            if (tab.currentEntry != null) {
+                for (Field field : tab.currentEntry.getFields()) {
+                    if (field.getName().contains(query)) {
+                        fields.add(field);
+                    }
+                }
             }
         }
+
         return fields;
     }
 }
